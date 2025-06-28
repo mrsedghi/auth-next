@@ -1,0 +1,18 @@
+.dashboardContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.welcomeMessage {
+  text-align: center;
+  color: #333;
+  font-size: 24px;
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+  }
+}

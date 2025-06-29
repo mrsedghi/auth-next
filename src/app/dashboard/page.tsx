@@ -6,25 +6,65 @@ import { useAuth } from "../context/AuthContext";
 import styles from "./dashboard.module.scss";
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, logout, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to auth page if user is not logged in
-    if (!user) {
+    if (!isLoading && !user) {
       router.push("/auth");
     }
-  }, [user, router]);
+  }, [user, isLoading, router]);
+
+  if (isLoading || !user) {
+    return (
+      <div className={styles.loading}>
+        <div className={styles.spinner}></div>
+      </div>
+    );
+  }
+
+  const handleLogout = () => {
+    logout();
+    router.push("/");
+  };
 
   if (!user) {
-    return null; // Or a loading spinner
+    return (
+      <div className={styles.loading}>
+        <div className={styles.spinner}></div>
+      </div>
+    );
   }
 
   return (
-    <div className={styles.dashboardContainer}>
-      <h1 className={styles.welcomeMessage}>
-        Welcome to the Dashboard, {user.name.first} {user.name.last}!
-      </h1>
+    <div className={styles.dashboard}>
+      <div className={styles.card}>
+        <h1>Welcome, {user.name.first}!</h1>
+
+        <div className={styles.userProfile}>
+          <img
+            src={user.picture.large}
+            alt={`${user.name.first}'s profile`}
+            className={styles.avatar}
+          />
+
+          <div className={styles.userDetails}>
+            <h2>
+              {user.name.first} {user.name.last}
+            </h2>
+            <p>
+              <strong>Email:</strong> {user.email}
+            </p>
+            <p>
+              <strong>Phone:</strong> {user.phone}
+            </p>
+          </div>
+        </div>
+
+        <button onClick={handleLogout} className={styles.logoutButton}>
+          Sign Out
+        </button>
+      </div>
     </div>
   );
 }
